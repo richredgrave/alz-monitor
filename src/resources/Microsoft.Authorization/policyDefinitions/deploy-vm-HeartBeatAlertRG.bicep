@@ -15,10 +15,9 @@ param deploymentRoleDefinitionIds array = [
     '3'
     '4'
 ])
-param parAlertSeverity string = '3'
+param parAlertSeverity string = '1'
 
 @allowed([
-    'PT1M'
     'PT5M'
     'PT15M'
     'PT30M'
@@ -27,7 +26,17 @@ param parAlertSeverity string = '3'
     'PT12H'
     'P1D'
 ])
-param parWindowSize string = 'P1D'
+param parWindowSize string = 'PT15M'
+
+@allowed([
+    'Equals'
+    'GreaterThan'
+    'GreaterThanOrEqual'
+    'LessThan'
+    'LessThanOrEqual'
+
+])
+param parOperator string = 'GreaterThan'
 
 @allowed([
     'PT1M'
@@ -36,7 +45,7 @@ param parWindowSize string = 'P1D'
     'PT30M'
     'PT1H'
 ])
-param parEvaluationFrequency string = 'PT1H'
+param parEvaluationFrequency string = 'PT5M'
 
 @allowed([
     'deployIfNotExists'
@@ -46,24 +55,37 @@ param parPolicyEffect string = 'deployIfNotExists'
 
 param parAutoMitigate string = 'true'
 
+param parautoResolve string = 'true'
+
+param parautoResolveTime string = '00:10:00'
+
 param parAlertState string = 'true'
 
-param parThreshold string = '0'
+param parThreshold string = '10'
+
+@allowed([
+  'Average'
+  'Count'
+  'Maximum'
+  'Minimum'
+  'Total'
+])
+
+param parTimeAggregation string = 'Average'
 
 param parMonitorDisable string = 'MonitorDisable' 
 
-module BackupHealthAlert '../../arm/Microsoft.Authorization/policyDefinitions/managementGroup/deploy.bicep' = {
-    name: '${uniqueString(deployment().name)}-rvbuha-policyDefinitions'
+module AvailableMemoryAlert '../../arm/Microsoft.Authorization/policyDefinitions/managementGroup/deploy.bicep' = {
+    name: '${uniqueString(deployment().name)}-vmama-policyDefinitions'
     params: {
-        name: 'Deploy_RecoveryVault_BackupHealth_Alert'
-        displayName: '[DINE] Deploy RV Backup Health Alert'
-        description: 'DINE policy to audit/deploy Recovery Vault Backup Health Alert'
+        name: 'Deploy_VM_HeartBeat_Alert'
+        displayName: '[DINE] Deploy VM HeartBeat Alert'
+        description: 'DINE policy to audit/deploy VM HeartBeat Alert'
         location: policyLocation
         metadata: {
-            version: '1.0.1'
-            Category: 'Site Recovery'
+            version: '1.0.0'
+            Category: 'Compute'
             source: 'https://github.com/Azure/ALZ-Monitor/'
-            _deployed_by_alz_monitor: 'True'
         }
         parameters: {
             severity: {
@@ -81,6 +103,37 @@ module BackupHealthAlert '../../arm/Microsoft.Authorization/policyDefinitions/ma
                 ]
                 defaultValue: parAlertSeverity
             }
+            operator: {
+                type: 'String'
+                metadata:{ displayName: 'Operator'}
+                allowedvalues:[
+                'Equals'
+                'GreaterThan'
+                'GreaterThanOrEqual'
+                'LessThan'
+                'LessThanOrEqual'
+            ]
+            defaultvalue: parOperator
+        }
+        timeAggregation:{
+            type:'String'
+            metadata: {
+              displayName: 'TimeAggregation'
+          }
+          allowedValues:[
+            'Average'
+            'Count'
+            'Maximum'
+            'Minimum'
+            'Total'
+
+          ]
+
+          defaultvalue: parTimeAggregation
+
+        }
+
+         
             windowSize: {
                 type: 'String'
                 metadata: {
@@ -88,14 +141,14 @@ module BackupHealthAlert '../../arm/Microsoft.Authorization/policyDefinitions/ma
                     description: 'Window size for the alert'
                 }
                 allowedValues: [
-                    'PT1M'
+                    
                     'PT5M'
                     'PT15M'
                     'PT30M'
                     'PT1H'
                     'PT6H'
                     'PT12H'
-                    'P1D'
+                    'PT24H'
                 ]
                 defaultValue: parWindowSize
             }
@@ -106,7 +159,6 @@ module BackupHealthAlert '../../arm/Microsoft.Authorization/policyDefinitions/ma
                     description: 'Evaluation frequency for the alert'
                 }
                 allowedValues: [
-                    'PT1M'
                     'PT5M'
                     'PT15M'
                     'PT30M'
@@ -126,6 +178,28 @@ module BackupHealthAlert '../../arm/Microsoft.Authorization/policyDefinitions/ma
                 ]
                 defaultValue: parAutoMitigate
             }
+            autoResolve: {
+                type: 'String'
+                metadata: {
+                    displayName: 'Auto Resolve'
+                    description: 'Auto Resolve for the alert'
+                }
+                allowedValues: [
+                    'true'
+                    'false'
+                ]
+                defaultValue: parautoResolve
+            }
+
+            autoResolveTime: {
+                type: 'String'
+                metadata: {
+                    displayName: 'Auto Resolve'
+                    description: 'Auto Resolve time for the alert in ISO 8601 format'
+                }
+           
+                defaultValue: parautoResolveTime
+            }
             enabled: {
                 type: 'String'
                 metadata: {
@@ -138,6 +212,7 @@ module BackupHealthAlert '../../arm/Microsoft.Authorization/policyDefinitions/ma
                 ]
                 defaultValue: parAlertState
             }
+     
             threshold: {
                 type: 'String'
                 metadata: {
@@ -173,8 +248,9 @@ module BackupHealthAlert '../../arm/Microsoft.Authorization/policyDefinitions/ma
                 allOf: [
                     {
                         field: 'type'
-                        equals: 'Microsoft.RecoveryServices/Vaults'
+                        equals: 'Microsoft.Compute/virtualMachines'
                     }
+
                     {
                         field: '[concat(\'tags[\', parameters(\'MonitorDisable\'), \']\')]'
                         notEquals: 'true'
@@ -185,23 +261,20 @@ module BackupHealthAlert '../../arm/Microsoft.Authorization/policyDefinitions/ma
                 effect: '[parameters(\'effect\')]'
                 details: {
                     roleDefinitionIds: deploymentRoleDefinitionIds
-                    type: 'Microsoft.Insights/metricAlerts'
+                    type: 'Microsoft.Insights/scheduledQueryRules'
                     existenceCondition: {
                         allOf: [
+               
                             {
-                                field: 'Microsoft.Insights/metricAlerts/criteria.Microsoft.Azure.Monitor.MultipleResourceMultipleMetricCriteria.allOf[*].metricNamespace'
-                                equals: 'Microsoft.RecoveryServices/Vaults'
+                                field: 'Microsoft.Insights/scheduledQueryRules/displayName'
+                                equals: '[concat(resourceGroup().name, \'-VMHeartBeatAlert\')]'
                             }
                             {
-                                field: 'Microsoft.Insights/metricAlerts/criteria.Microsoft.Azure.Monitor.MultipleResourceMultipleMetricCriteria.allOf[*].metricName'
-                                equals: 'backuphealthevent'
+                                field: 'Microsoft.Insights/scheduledqueryrules/scopes[*]'
+                                equals: '[concat(subscription().id, \'/resourceGroups/\', resourceGroup().name)]'
                             }
                             {
-                                field: 'Microsoft.Insights/metricalerts/scopes[*]'
-                                equals: '[concat(subscription().id, \'/resourceGroups/\', resourceGroup().name, \'/providers/Microsoft.RecoveryServices/Vaults/\', field(\'fullName\'))]'
-                            }
-                            {
-                                field: 'Microsoft.Insights/metricAlerts/enabled'
+                                field: 'Microsoft.Insights/scheduledqueryrules/enabled'
                                 equals: '[parameters(\'enabled\')]'
                             }
                         ]
@@ -213,20 +286,7 @@ module BackupHealthAlert '../../arm/Microsoft.Authorization/policyDefinitions/ma
                                 '$schema': 'https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#'
                                 contentVersion: '1.0.0.0'
                                 parameters: {
-                                    resourceName: {
-                                        type: 'String'
-                                        metadata: {
-                                            displayName: 'resourceName'
-                                            description: 'Name of the resource'
-                                        }
-                                    }
-                                    resourceId: {
-                                        type: 'String'
-                                        metadata: {
-                                            displayName: 'resourceId'
-                                            description: 'Resource ID of the resource emitting the metric that will be used for the comparison'
-                                        }
-                                    }
+                                
                                     severity: {
                                         type: 'String'
                                     }
@@ -239,47 +299,80 @@ module BackupHealthAlert '../../arm/Microsoft.Authorization/policyDefinitions/ma
                                     autoMitigate: {
                                         type: 'String'
                                     }
+                                    autoResolve: {
+                                        type: 'String'
+                                    }
+                                    autoResolveTime: {
+                                        type: 'String'
+                                    }
                                     enabled: {
                                         type: 'String'
                                     }
                                     threshold: {
                                         type: 'String'
                                     }
+                                    operator: {
+                                        type:'String'
+
+                                    }
+                                    timeAggregation: {
+                                        type:'String'
+
+                                    }
                                 }
                                 variables: {}
                                 resources: [
                                     {
-                                        type: 'Microsoft.Insights/metricAlerts'
-                                        apiVersion: '2018-03-01'
-                                        name: '[concat(parameters(\'resourceName\'), \'-BackupHealth\')]'
-                                        location: 'global'
-                                        tags: {
-                                            _deployed_by_alz_monitor: true
-                                        }
+                                        type: 'Microsoft.Insights/scheduledQueryRules'
+                                        apiVersion: '2022-08-01-preview'
+                                        name: '[concat(resourceGroup().name, \'-VMHeartBeatAlert\')]'
+                                        location: '[resourceGroup().location]'
                                         properties: {
-                                            description: 'Metric Alert for Recovery Vault Backup Health Events'
+                                            displayName: '[concat(resourceGroup().name, \'-VMHeartBeatAlert\')]'
+                                            description: 'Log Alert for Virtual Machine Heartbeat'
                                             severity: '[parameters(\'severity\')]'
                                             enabled: '[parameters(\'enabled\')]'
                                             scopes: [
-                                                '[parameters(\'resourceId\')]'
+                                                '[resourceGroup().Id]'
+                                            ]
+                                            targetResourceTypes: [
+                                                'Microsoft.Compute/virtualMachines'
                                             ]
                                             evaluationFrequency: '[parameters(\'evaluationFrequency\')]'
                                             windowSize: '[parameters(\'windowSize\')]'
                                             criteria: {
                                                 allOf: [
                                                     {
-                                                        name: 'backuphealthevent'
-                                                        metricNamespace: 'Microsoft.RecoveryServices/Vaults'
-                                                        metricName: 'backuphealthevent'
-                                                        operator: 'GreaterThan'
+                                                        query: 'Heartbeat| summarize TimeGenerated=max(TimeGenerated) by Computer, _ResourceId| extend Duration = datetime_diff(\'minute\',now(),TimeGenerated)| summarize AggregatedValue = min(Duration) by Computer, bin(TimeGenerated,5m), _ResourceId'
+                                                        metricMeasureColumn: 'AggregatedValue'
                                                         threshold: '[parameters(\'threshold\')]'
-                                                        timeAggregation: 'Count'
-                                                        criterionType: 'StaticThresholdCriterion'
+                                                        operator: '[parameters(\'operator\')]'
+                                                        resourceIdColumn: '_ResourceId'
+                                                        timeAggregation: '[parameters(\'timeAggregation\')]'
+                                                        dimensions:[
+                                                            {
+                                                                name: 'Computer'
+                                                                operator: 'Include'
+                                                                values: [
+                                                                    '*'
+                                                                ]
+                                                            }  
+
+                                                        ]
+                                                        failingPariods:{
+                                                            numberOfEvaluationPeriods: 1
+                                                             minFailingPeriodsToAlert: 1
+                                                        }
                                                     }
                                                 ]
-                                                'odata.type': 'Microsoft.Azure.Monitor.SingleResourceMultipleMetricCriteria'
+                                             
                                             }
                                             autoMitigate: '[parameters(\'autoMitigate\')]'
+                                            ruleResolveConfiguration: {
+                                                autoResolved: '[parameters(\'autoResolve\')]'
+                                                timeToResolve: '[parameters(\'autoResolveTime\')]'
+                                              }
+                                          
                                             parameters: {
                                                 severity: {
                                                     value: '[parameters(\'severity\')]'
@@ -293,24 +386,26 @@ module BackupHealthAlert '../../arm/Microsoft.Authorization/policyDefinitions/ma
                                                 autoMitigate: {
                                                     value: '[parameters(\'autoMitigate\')]'
                                                 }
+                                                autoResolve: {
+                                                    value: '[parameters(\'autoResolve\')]'
+                                                }
+                                                autoResolveTime: {
+                                                    value: '[parameters(\'autoResolveTime\')]'
+                                                }
                                                 enabled: {
                                                     value: '[parameters(\'enabled\')]'
                                                 }
                                                 threshold: {
                                                     value: '[parameters(\'threshold\')]'
                                                 }
+                                         
                                             }
                                         }
                                     }
                                 ]
                             }
                             parameters: {
-                                resourceName: {
-                                    value: '[field(\'name\')]'
-                                }
-                                resourceId: {
-                                    value: '[field(\'id\')]'
-                                }
+                              
                                 severity: {
                                     value: '[parameters(\'severity\')]'
                                 }
@@ -322,6 +417,12 @@ module BackupHealthAlert '../../arm/Microsoft.Authorization/policyDefinitions/ma
                                 }
                                 autoMitigate: {
                                     value: '[parameters(\'autoMitigate\')]'
+                                  }
+                                  autoResolve: {
+                                    value: '[parameters(\'autoResolve\')]'
+                                }
+                                autoResolveTime: {
+                                    value: '[parameters(\'autoResolveTime\')]'
                                 }
                                 enabled: {
                                     value: '[parameters(\'enabled\')]'
@@ -329,6 +430,14 @@ module BackupHealthAlert '../../arm/Microsoft.Authorization/policyDefinitions/ma
                                 threshold: {
                                     value: '[parameters(\'threshold\')]'
                                 }
+                                operator: {
+                                    value: '[parameters(\'operator\')]'
+                                }
+                                timeAggregation: {
+                                    value: '[parameters(\'timeAggregation\')]'
+                                }
+
+
                             }
                         }
                     }

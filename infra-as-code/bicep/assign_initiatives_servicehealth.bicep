@@ -4,7 +4,7 @@
 targetScope = 'managementGroup'
 
 @description('The management group scope at which the policy definition exists. DEFAULT VALUE = "alz"')
-param parPolicyManagementGroupId string = 'alz'
+param parPolicyPseudoRootMgmtGroup string = 'alz'
 
 @description('Set Parameter to true to Opt-out of deployment telemetry')
 param parTelemetryOptOut bool = false
@@ -16,14 +16,14 @@ param parPolicyAssignmentParameters  object = {}
 param parPolicyAssignmentParametersServiceHealth  object = {}
 
 // Customer Usage Attribution Id
-var varCuaid = 'd87415c4-01ef-4667-af89-0b5adc14af1b'
+var varCuaid = '860d2afd-b71e-452f-9d3a-e56196cba570'
 
 var varPolicyAssignmentParametersServiceHealth = union(parPolicyAssignmentParameters, parPolicyAssignmentParametersServiceHealth)
 
 module Deploy_Alerting_Management '../../infra-as-code/bicep/modules/policy/assignments/policyAssignmentManagementGroup.bicep' = {
   name: '${uniqueString(deployment().name)}-Alerting-ServiceHealth'
   params: {
-    parPolicyAssignmentDefinitionId: '/providers/Microsoft.Management/managementGroups/${parPolicyManagementGroupId}/providers/Microsoft.Authorization/policySetDefinitions/Alerting-ServiceHealth'
+    parPolicyAssignmentDefinitionId: '/providers/Microsoft.Management/managementGroups/${parPolicyPseudoRootMgmtGroup}/providers/Microsoft.Authorization/policySetDefinitions/Alerting-ServiceHealth'
     parPolicyAssignmentDisplayName: 'ALZ Monitoring Alerts for Service Health'
     parPolicyAssignmentName: 'ALZ-Monitor_SvcHealth'
     parPolicyAssignmentDescription: 'Initiative to deploy alerts relevant to the ALZ Management Management group. Also included are a generic action group and alert processing rule required to support the alerts.'

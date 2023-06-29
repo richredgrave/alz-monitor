@@ -27,8 +27,10 @@ Alerts, action groups and alert processing rules are created as follows:
 6. For the policies to work, the following Azure resource providers, normally registered by default, must be registered on all subscriptions in scope:
     - Microsoft.AlertsManagement
     - Microsoft.Insights
+  
+  Please see [here](https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/resource-providers-and-types#register-resource-provider) for details on how to register a resource provider should you need to do so.
 
-Please see [here](https://learn.microsoft.com/en-us/azure/azure-resource-manager/management/resource-providers-and-types#register-resource-provider) for details on how to register a resource provider should you need to do so.
+7. For leveraging the log alerts for Virtual Machines, ensure that VM Insights is enabled for the Virtual Machines to be monitored. For more details on VM Insights deployment see [here](https://learn.microsoft.com/en-us/azure/azure-monitor/vm/vminsights-enable-overview) . Please note only the performance collection of the VM insights solution is required  for the current alerts to deploy. 
 
 _*While it´s recommended to implement the alert policies and initiatives to an ALZ Management Group hierarchy, it is not a technical requirement. These policies and initiatives can be implemented in existing brownfield scenarios that don´t adhere to the ALZ Management Group hierarchy. For example, in hierarchies where there is a single management group, or where the structure does not align to ALZ. At least one management group is required. In case you haven't implemented management groups, we included guidance on how to get started._
 
@@ -137,3 +139,5 @@ In some scenarios, it may be necessary to remove everything deployed by the ALZ 
 - To deploy with GitHub Actions, please proceed with [Deploy with GitHub Actions](./Deploy-with-GitHub-Actions)
 - To deploy with Azure CLI, please proceed with [Deploy with Azure CLI](./Deploy-with-Azure-CLI)
 - To deploy with Azure PowerShell, please proceed with [Deploy with Azure PowerShell](./Deploy-with-Azure-PowerShell)
+- To deploy Service Health or another Policy Initiative (individually) with Azure CLI, please proceed with [Deploy individual Policy Initiatives with Azure CLI](./Deploy-individual-Policy-Initiatives-with-Azure-CLI)
+- To deploy Service Health or another Policy Initiative (individually) with PowerShell, please proceed with [Deploy individual Policy Initiatives with Azure PowerShell](./Deploy-individual-Policy-Initiatives-with-Azure-PowerShell)

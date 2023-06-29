@@ -20,9 +20,10 @@
       "name": "Alerting-ServiceHealth",
       "properties": {
         "metadata": {
-          "version": "1.0.0",
+          "version": "1.1.0",
           "category": "Monitoring",
-          "source": "https://github.com/Azure/ALZ-Monitor/"
+          "source": "https://github.com/Azure/ALZ-Monitor/",
+          "_deployed_by_alz_monitor": true
         },
         "parameters": {
           "ALZMonitorResourceGroupName": {
@@ -32,7 +33,7 @@
           "ALZMonitorResourceGroupTags": {
             "type": "Object",
             "defaultValue": {
-              "Environment": "test"
+              "_deployed_by_alz_monitor": true
             }
           },
           "ALZMonitorResourceGroupLocation": {
@@ -58,8 +59,7 @@
           "svcHlthSecAdvisoryAlertState": {
             "type": "string",
             "defaultValue": "true"
-          }
-          ,
+          },
           "ALZMonitorActionGroupEmail": {
             "type": "string",
             "defaultValue": "action@mail.com"
@@ -101,6 +101,9 @@
               },
               "alertResourceGroupLocation": {
                 "value": "[[parameters('ALZMonitorResourceGroupLocation')]"
+              },
+              "ALZMonitorActionGroupEmail": {
+                "value": "[[parameters('ALZMonitorActionGroupEmail')]"
               }
             }
           },
@@ -118,6 +121,9 @@
               },
               "alertResourceGroupLocation": {
                 "value": "[[parameters('ALZMonitorResourceGroupLocation')]"
+              },
+              "ALZMonitorActionGroupEmail": {
+                "value": "[[parameters('ALZMonitorActionGroupEmail')]"
               }
             }
           },
@@ -134,6 +140,9 @@
               },
               "alertResourceGroupLocation": {
                 "value": "[[parameters('ALZMonitorResourceGroupLocation')]"
+              },
+              "ALZMonitorActionGroupEmail": {
+                "value": "[[parameters('ALZMonitorActionGroupEmail')]"
               }
             },
             "policyDefinitionId": "[concat('/providers/Microsoft.Management/managementGroups/',managementGroup().name, '/providers/Microsoft.Authorization/policyDefinitions/Deploy_activitylog_ServiceHealth_Maintenance')]"
@@ -151,13 +160,15 @@
               },
               "alertResourceGroupLocation": {
                 "value": "[[parameters('ALZMonitorResourceGroupLocation')]"
+              },
+              "ALZMonitorActionGroupEmail": {
+                "value": "[[parameters('ALZMonitorActionGroupEmail')]"
               }
             },
             "policyDefinitionId": "[concat('/providers/Microsoft.Management/managementGroups/',managementGroup().name, '/providers/Microsoft.Authorization/policyDefinitions/Deploy_activitylog_ServiceHealth_SecurityAdvisory')]"
-          }
-           ,
-           {
-             "parameters": {
+          },
+          {
+            "parameters": {
               "ALZMonitorResourceGroupName": {
                 "value": "[[parameters('ALZMonitorResourceGroupName')]"
               },
@@ -173,9 +184,9 @@
               "MonitorDisable": {
                 "value": "[[parameters('MonitorDisable')]"
               }
-             },
-             "policyDefinitionId": "[concat('/providers/Microsoft.Management/managementGroups/',managementGroup().name, '/providers/Microsoft.Authorization/policyDefinitions/Deploy_AlertProcessing_Rule')]"
-           }
+            },
+            "policyDefinitionId": "[concat('/providers/Microsoft.Management/managementGroups/',managementGroup().name, '/providers/Microsoft.Authorization/policyDefinitions/Deploy_AlertProcessing_Rule')]"
+          }
         ],
         "policyType": "Custom"
       }

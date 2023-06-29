@@ -2,7 +2,7 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "parPolicyManagementGroupId": {
+        "parPolicyPseudoRootMgmtGroup": {
             "value": "alz"
         },
         "parPolicyAssignmentParameters": {
@@ -184,23 +184,8 @@
                 "PIPBytesInDDoSThreshold": {
                     "value": "8000000"
                 },
-                "RVBackupHealthAlertSeverity": {
-                    "value": "3"
-                },
-                "RVBackupHealthWindowSize": {
-                    "value": "P1D"
-                },
-                "RVBackupHealthEvaluationFrequency": {
-                    "value": "PT1H"
-                },
-                "RVBackupHealthPolicyEffect": {
-                    "value": "deployIfNotExists"
-                },
-                "RVBackupHealthAlertState": {
-                    "value": "true"
-                },
-                "RVBackupHealthThreshold": {
-                    "value": "20"
+                "RVBackupHealthMonitorPolicyEffect" : {
+                    "value": "modify"
                 },
                 "VNETDDOSAttackAlertSeverity": {
                     "value": "1"

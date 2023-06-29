@@ -4,8 +4,8 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.17.1.54307",
-      "templateHash": "3119951775673617555"
+      "version": "0.18.4.5664",
+      "templateHash": "7694453237048934813"
     }
   },
   "parameters": {
@@ -21,7 +21,7 @@
     },
     "parAlertSeverity": {
       "type": "string",
-      "defaultValue": "3",
+      "defaultValue": "1",
       "allowedValues": [
         "0",
         "1",
@@ -32,9 +32,8 @@
     },
     "parWindowSize": {
       "type": "string",
-      "defaultValue": "P1D",
+      "defaultValue": "PT15M",
       "allowedValues": [
-        "PT1M",
         "PT5M",
         "PT15M",
         "PT30M",
@@ -44,9 +43,20 @@
         "P1D"
       ]
     },
+    "parOperator": {
+      "type": "string",
+      "defaultValue": "GreaterThan",
+      "allowedValues": [
+        "Equals",
+        "GreaterThan",
+        "GreaterThanOrEqual",
+        "LessThan",
+        "LessThanOrEqual"
+      ]
+    },
     "parEvaluationFrequency": {
       "type": "string",
-      "defaultValue": "PT1H",
+      "defaultValue": "PT5M",
       "allowedValues": [
         "PT1M",
         "PT5M",
@@ -67,13 +77,32 @@
       "type": "string",
       "defaultValue": "true"
     },
+    "parautoResolve": {
+      "type": "string",
+      "defaultValue": "true"
+    },
+    "parautoResolveTime": {
+      "type": "string",
+      "defaultValue": "00:10:00"
+    },
     "parAlertState": {
       "type": "string",
       "defaultValue": "true"
     },
     "parThreshold": {
       "type": "string",
-      "defaultValue": "0"
+      "defaultValue": "10"
+    },
+    "parTimeAggregation": {
+      "type": "string",
+      "defaultValue": "Average",
+      "allowedValues": [
+        "Average",
+        "Count",
+        "Maximum",
+        "Minimum",
+        "Total"
+      ]
     },
     "parMonitorDisable": {
       "type": "string",
@@ -84,7 +113,7 @@
     {
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2022-09-01",
-      "name": "[format('{0}-rvbuha-policyDefinitions', uniqueString(deployment().name))]",
+      "name": "[format('{0}-vmama-policyDefinitions', uniqueString(deployment().name))]",
       "location": "[deployment().location]",
       "properties": {
         "expressionEvaluationOptions": {
@@ -93,23 +122,22 @@
         "mode": "Incremental",
         "parameters": {
           "name": {
-            "value": "Deploy_RecoveryVault_BackupHealth_Alert"
+            "value": "Deploy_VM_HeartBeat_Alert"
           },
           "displayName": {
-            "value": "[DINE] Deploy RV Backup Health Alert"
+            "value": "[DINE] Deploy VM HeartBeat Alert"
           },
           "description": {
-            "value": "DINE policy to audit/deploy Recovery Vault Backup Health Alert"
+            "value": "DINE policy to audit/deploy VM HeartBeat Alert"
           },
           "location": {
             "value": "[parameters('policyLocation')]"
           },
           "metadata": {
             "value": {
-              "version": "1.0.1",
-              "Category": "Site Recovery",
-              "source": "https://github.com/Azure/ALZ-Monitor/",
-              "_deployed_by_alz_monitor": "True"
+              "version": "1.0.0",
+              "Category": "Compute",
+              "source": "https://github.com/Azure/ALZ-Monitor/"
             }
           },
           "parameters": {
@@ -129,6 +157,34 @@
                 ],
                 "defaultValue": "[parameters('parAlertSeverity')]"
               },
+              "operator": {
+                "type": "String",
+                "metadata": {
+                  "displayName": "Operator"
+                },
+                "allowedvalues": [
+                  "Equals",
+                  "GreaterThan",
+                  "GreaterThanOrEqual",
+                  "LessThan",
+                  "LessThanOrEqual"
+                ],
+                "defaultvalue": "[parameters('parOperator')]"
+              },
+              "timeAggregation": {
+                "type": "String",
+                "metadata": {
+                  "displayName": "TimeAggregation"
+                },
+                "allowedValues": [
+                  "Average",
+                  "Count",
+                  "Maximum",
+                  "Minimum",
+                  "Total"
+                ],
+                "defaultvalue": "[parameters('parTimeAggregation')]"
+              },
               "windowSize": {
                 "type": "String",
                 "metadata": {
@@ -136,14 +192,13 @@
                   "description": "Window size for the alert"
                 },
                 "allowedValues": [
-                  "PT1M",
                   "PT5M",
                   "PT15M",
                   "PT30M",
                   "PT1H",
                   "PT6H",
                   "PT12H",
-                  "P1D"
+                  "PT24H"
                 ],
                 "defaultValue": "[parameters('parWindowSize')]"
               },
@@ -154,7 +209,6 @@
                   "description": "Evaluation frequency for the alert"
                 },
                 "allowedValues": [
-                  "PT1M",
                   "PT5M",
                   "PT15M",
                   "PT30M",
@@ -173,6 +227,26 @@
                   "false"
                 ],
                 "defaultValue": "[parameters('parAutoMitigate')]"
+              },
+              "autoResolve": {
+                "type": "String",
+                "metadata": {
+                  "displayName": "Auto Resolve",
+                  "description": "Auto Resolve for the alert"
+                },
+                "allowedValues": [
+                  "true",
+                  "false"
+                ],
+                "defaultValue": "[parameters('parautoResolve')]"
+              },
+              "autoResolveTime": {
+                "type": "String",
+                "metadata": {
+                  "displayName": "Auto Resolve",
+                  "description": "Auto Resolve time for the alert in ISO 8601 format"
+                },
+                "defaultValue": "[parameters('parautoResolveTime')]"
               },
               "enabled": {
                 "type": "String",
@@ -222,7 +296,7 @@
                 "allOf": [
                   {
                     "field": "type",
-                    "equals": "Microsoft.RecoveryServices/Vaults"
+                    "equals": "Microsoft.Compute/virtualMachines"
                   },
                   {
                     "field": "[[concat('tags[', parameters('MonitorDisable'), ']')]",
@@ -234,23 +308,19 @@
                 "effect": "[[parameters('effect')]",
                 "details": {
                   "roleDefinitionIds": "[parameters('deploymentRoleDefinitionIds')]",
-                  "type": "Microsoft.Insights/metricAlerts",
+                  "type": "Microsoft.Insights/scheduledQueryRules",
                   "existenceCondition": {
                     "allOf": [
                       {
-                        "field": "Microsoft.Insights/metricAlerts/criteria.Microsoft.Azure.Monitor.MultipleResourceMultipleMetricCriteria.allOf[*].metricNamespace",
-                        "equals": "Microsoft.RecoveryServices/Vaults"
+                        "field": "Microsoft.Insights/scheduledQueryRules/displayName",
+                        "equals": "[[concat(resourceGroup().name, '-VMHeartBeatAlert')]"
                       },
                       {
-                        "field": "Microsoft.Insights/metricAlerts/criteria.Microsoft.Azure.Monitor.MultipleResourceMultipleMetricCriteria.allOf[*].metricName",
-                        "equals": "backuphealthevent"
+                        "field": "Microsoft.Insights/scheduledqueryrules/scopes[*]",
+                        "equals": "[[concat(subscription().id, '/resourceGroups/', resourceGroup().name)]"
                       },
                       {
-                        "field": "Microsoft.Insights/metricalerts/scopes[*]",
-                        "equals": "[[concat(subscription().id, '/resourceGroups/', resourceGroup().name, '/providers/Microsoft.RecoveryServices/Vaults/', field('fullName'))]"
-                      },
-                      {
-                        "field": "Microsoft.Insights/metricAlerts/enabled",
+                        "field": "Microsoft.Insights/scheduledqueryrules/enabled",
                         "equals": "[[parameters('enabled')]"
                       }
                     ]
@@ -262,20 +332,6 @@
                         "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
                         "contentVersion": "1.0.0.0",
                         "parameters": {
-                          "resourceName": {
-                            "type": "String",
-                            "metadata": {
-                              "displayName": "resourceName",
-                              "description": "Name of the resource"
-                            }
-                          },
-                          "resourceId": {
-                            "type": "String",
-                            "metadata": {
-                              "displayName": "resourceId",
-                              "description": "Resource ID of the resource emitting the metric that will be used for the comparison"
-                            }
-                          },
                           "severity": {
                             "type": "String"
                           },
@@ -288,47 +344,75 @@
                           "autoMitigate": {
                             "type": "String"
                           },
+                          "autoResolve": {
+                            "type": "String"
+                          },
+                          "autoResolveTime": {
+                            "type": "String"
+                          },
                           "enabled": {
                             "type": "String"
                           },
                           "threshold": {
+                            "type": "String"
+                          },
+                          "operator": {
+                            "type": "String"
+                          },
+                          "timeAggregation": {
                             "type": "String"
                           }
                         },
                         "variables": {},
                         "resources": [
                           {
-                            "type": "Microsoft.Insights/metricAlerts",
-                            "apiVersion": "2018-03-01",
-                            "name": "[[concat(parameters('resourceName'), '-BackupHealth')]",
-                            "location": "global",
-                            "tags": {
-                              "_deployed_by_alz_monitor": true
-                            },
+                            "type": "Microsoft.Insights/scheduledQueryRules",
+                            "apiVersion": "2022-08-01-preview",
+                            "name": "[[concat(resourceGroup().name, '-VMHeartBeatAlert')]",
+                            "location": "[[resourceGroup().location]",
                             "properties": {
-                              "description": "Metric Alert for Recovery Vault Backup Health Events",
+                              "displayName": "[[concat(resourceGroup().name, '-VMHeartBeatAlert')]",
+                              "description": "Log Alert for Virtual Machine Heartbeat",
                               "severity": "[[parameters('severity')]",
                               "enabled": "[[parameters('enabled')]",
                               "scopes": [
-                                "[[parameters('resourceId')]"
+                                "[[resourceGroup().Id]"
+                              ],
+                              "targetResourceTypes": [
+                                "Microsoft.Compute/virtualMachines"
                               ],
                               "evaluationFrequency": "[[parameters('evaluationFrequency')]",
                               "windowSize": "[[parameters('windowSize')]",
                               "criteria": {
                                 "allOf": [
                                   {
-                                    "name": "backuphealthevent",
-                                    "metricNamespace": "Microsoft.RecoveryServices/Vaults",
-                                    "metricName": "backuphealthevent",
-                                    "operator": "GreaterThan",
+                                    "query": "Heartbeat| summarize TimeGenerated=max(TimeGenerated) by Computer, _ResourceId| extend Duration = datetime_diff('minute',now(),TimeGenerated)| summarize AggregatedValue = min(Duration) by Computer, bin(TimeGenerated,5m), _ResourceId",
+                                    "metricMeasureColumn": "AggregatedValue",
                                     "threshold": "[[parameters('threshold')]",
-                                    "timeAggregation": "Count",
-                                    "criterionType": "StaticThresholdCriterion"
+                                    "operator": "[[parameters('operator')]",
+                                    "resourceIdColumn": "_ResourceId",
+                                    "timeAggregation": "[[parameters('timeAggregation')]",
+                                    "dimensions": [
+                                      {
+                                        "name": "Computer",
+                                        "operator": "Include",
+                                        "values": [
+                                          "*"
+                                        ]
+                                      }
+                                    ],
+                                    "failingPariods": {
+                                      "numberOfEvaluationPeriods": 1,
+                                      "minFailingPeriodsToAlert": 1
+                                    }
                                   }
-                                ],
-                                "odata.type": "Microsoft.Azure.Monitor.SingleResourceMultipleMetricCriteria"
+                                ]
                               },
                               "autoMitigate": "[[parameters('autoMitigate')]",
+                              "ruleResolveConfiguration": {
+                                "autoResolved": "[[parameters('autoResolve')]",
+                                "timeToResolve": "[[parameters('autoResolveTime')]"
+                              },
                               "parameters": {
                                 "severity": {
                                   "value": "[[parameters('severity')]"
@@ -342,6 +426,12 @@
                                 "autoMitigate": {
                                   "value": "[[parameters('autoMitigate')]"
                                 },
+                                "autoResolve": {
+                                  "value": "[[parameters('autoResolve')]"
+                                },
+                                "autoResolveTime": {
+                                  "value": "[[parameters('autoResolveTime')]"
+                                },
                                 "enabled": {
                                   "value": "[[parameters('enabled')]"
                                 },
@@ -354,12 +444,6 @@
                         ]
                       },
                       "parameters": {
-                        "resourceName": {
-                          "value": "[[field('name')]"
-                        },
-                        "resourceId": {
-                          "value": "[[field('id')]"
-                        },
                         "severity": {
                           "value": "[[parameters('severity')]"
                         },
@@ -372,11 +456,23 @@
                         "autoMitigate": {
                           "value": "[[parameters('autoMitigate')]"
                         },
+                        "autoResolve": {
+                          "value": "[[parameters('autoResolve')]"
+                        },
+                        "autoResolveTime": {
+                          "value": "[[parameters('autoResolveTime')]"
+                        },
                         "enabled": {
                           "value": "[[parameters('enabled')]"
                         },
                         "threshold": {
                           "value": "[[parameters('threshold')]"
+                        },
+                        "operator": {
+                          "value": "[[parameters('operator')]"
+                        },
+                        "timeAggregation": {
+                          "value": "[[parameters('timeAggregation')]"
                         }
                       }
                     }
@@ -392,8 +488,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.17.1.54307",
-              "templateHash": "9902724211874229700"
+              "version": "0.18.4.5664",
+              "templateHash": "15470550829135380330"
             }
           },
           "parameters": {

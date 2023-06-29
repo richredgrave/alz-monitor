@@ -4,7 +4,7 @@
 targetScope = 'managementGroup'
 
 @description('The management group scope at which the policy definition exists. DEFAULT VALUE = "alz"')
-param parPolicyManagementGroupId string = 'alz'
+param parPolicyPseudoRootMgmtGroup string = 'alz'
 
 @description('Set Parameter to true to Opt-out of deployment telemetry')
 param parTelemetryOptOut bool = false
@@ -16,14 +16,14 @@ param parPolicyAssignmentParameters  object = {}
 param parPolicyAssignmentParametersLZ  object = {}
 
 // Customer Usage Attribution Id
-var varCuaid = 'd87415c4-01ef-4667-af89-0b5adc14af1b'
+var varCuaid = '7bcfc615-be78-43da-b81d-98959a9465a5'
 
 var varPolicyAssignmentParametersLZ = union(parPolicyAssignmentParameters, parPolicyAssignmentParametersLZ)
 
 module Deploy_Alerting_Management '../../infra-as-code/bicep/modules/policy/assignments/policyAssignmentManagementGroup.bicep' = {
   name: '${uniqueString(deployment().name)}-Alerting-LandingZones'
   params: {
-    parPolicyAssignmentDefinitionId: '/providers/Microsoft.Management/managementGroups/${parPolicyManagementGroupId}/providers/Microsoft.Authorization/policySetDefinitions/Alerting-LandingZone'
+    parPolicyAssignmentDefinitionId: '/providers/Microsoft.Management/managementGroups/${parPolicyPseudoRootMgmtGroup}/providers/Microsoft.Authorization/policySetDefinitions/Alerting-LandingZone'
     parPolicyAssignmentDisplayName: 'ALZ Monitoring Alerts for LandingZones'
     parPolicyAssignmentName: 'ALZ-Monitor_LandingZones'
     parPolicyAssignmentDescription: 'Initiative to deploy alerts relevant to the ALZ LandingZones management group'

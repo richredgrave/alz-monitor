@@ -1,7 +1,7 @@
 # Wiki content
 
 * [What's New](./WhatsNew)
-* [Monitoring and Alerting](./MonitoringAndAlerting)
+* [Monitoring and Alerting](./Monitoring-and-Alerting-in-ALZ)
 * [Alert Details](./AlertsDetails)
 * [Azure Policy Initiatives](./PolicyInitiatives)
 * Deploying ALZ Monitor
@@ -10,6 +10,8 @@
    * [Deploy with GitHub Actions](./Deploy-with-GitHub-Actions)
    * [Deploy with Azure CLI](./Deploy-with-Azure-CLI)
    * [Deploy with Azure PowerShell](./Deploy-with-Azure-PowerShell)
+   * [Deploy individual Policy Initiatives with Azure CLI](./Deploy-individual-Policy-Initiatives-with-Azure-CLI)
+   * [Deploy individual Policy Initiatives with Azure PowerShell](./Deploy-individual-Policy-Initiatives-with-Azure-PowerShell)
    * [Policy remediation](./Policy-remediation)
 * [Cleaning up an ALZ Monitor Deployment](./Cleaning-up-an-ALZ-Monitor-Deployment)
 * [Frequently Asked Questions](./FAQ)
