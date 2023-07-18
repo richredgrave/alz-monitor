@@ -4,8 +4,8 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.18.4.5664",
-      "templateHash": "15670852757897835689"
+      "version": "0.19.5.34762",
+      "templateHash": "4103818880241705200"
     }
   },
   "parameters": {
@@ -59,10 +59,10 @@
             "value": "Deploy_activitylog_ResourceHealth_Unhealthy_Alert"
           },
           "displayName": {
-            "value": "[DINE] Deploy Resource Health Unhealthy Alert"
+            "value": "Deploy Resource Health Unhealthy Alert"
           },
           "description": {
-            "value": "DINE policy to Deploy Resource Health Unhealthy Alert"
+            "value": "Policy to Deploy Resource Health Unhealthy Alert"
           },
           "location": {
             "value": "[parameters('policyLocation')]"
@@ -70,8 +70,11 @@
           "metadata": {
             "value": {
               "version": "1.0.1",
-              "Category": "ServiceHealth",
-              "source": "https://github.com/Azure/ALZ-Monitor/",
+              "category": "Monitoring",
+              "source": "https://github.com/Azure/Enterprise-Scale/",
+              "alzCloudEnvironments": [
+                "AzureCloud"
+              ],
               "_deployed_by_alz_monitor": "True"
             }
           },
@@ -326,8 +329,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.18.4.5664",
-              "templateHash": "15470550829135380330"
+              "version": "0.19.5.34762",
+              "templateHash": "15420579663502908010"
             }
           },
           "parameters": {

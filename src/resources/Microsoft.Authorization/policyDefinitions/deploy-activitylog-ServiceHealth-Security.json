@@ -4,8 +4,8 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.18.4.5664",
-      "templateHash": "3619012435889055028"
+      "version": "0.19.5.34762",
+      "templateHash": "14034725736029667489"
     }
   },
   "parameters": {
@@ -63,10 +63,10 @@
             "value": "Deploy_activitylog_ServiceHealth_SecurityAdvisory"
           },
           "displayName": {
-            "value": "[DINE] Deploy Service Health Security Advisory Alert"
+            "value": "Deploy Service Health Security Advisory Alert"
           },
           "description": {
-            "value": "DINE policy to Deploy Service Health Security Advisory Alert"
+            "value": "Policy to Deploy Service Health Security Advisory Alert"
           },
           "location": {
             "value": "[parameters('policyLocation')]"
@@ -74,8 +74,11 @@
           "metadata": {
             "value": {
               "version": "1.1.0",
-              "Category": "ServiceHealth",
-              "source": "https://github.com/Azure/ALZ-Monitor/",
+              "category": "Monitoring",
+              "source": "https://github.com/Azure/Enterprise-Scale/",
+              "alzCloudEnvironments": [
+                "AzureCloud"
+              ],
               "_deployed_by_alz_monitor": "True"
             }
           },
@@ -372,8 +375,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.18.4.5664",
-              "templateHash": "15470550829135380330"
+              "version": "0.19.5.34762",
+              "templateHash": "15420579663502908010"
             }
           },
           "parameters": {

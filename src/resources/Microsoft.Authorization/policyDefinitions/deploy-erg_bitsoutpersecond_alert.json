@@ -4,8 +4,8 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.18.4.5664",
-      "templateHash": "4125203915542515415"
+      "version": "0.19.5.34762",
+      "templateHash": "1173991749657730648"
     }
   },
   "parameters": {
@@ -96,10 +96,10 @@
             "value": "Deploy_ERGw_ExpressRouteBitsOut_Alert"
           },
           "displayName": {
-            "value": "[DINE] Deploy ERG ExpressRoute Bits Out Alert"
+            "value": "Deploy ERG ExpressRoute Bits Out Alert"
           },
           "description": {
-            "value": "DINE policy to audit/deploy ER Gateway Connection BitsOutPerSecond Alert"
+            "value": "Policy to audit/deploy ER Gateway Connection BitsOutPerSecond Alert"
           },
           "location": {
             "value": "[parameters('policyLocation')]"
@@ -107,8 +107,11 @@
           "metadata": {
             "value": {
               "version": "1.0.1",
-              "Category": "Networking",
-              "source": "https://github.com/Azure/ALZ-Monitor/",
+              "category": "Network",
+              "source": "https://github.com/Azure/Enterprise-Scale/",
+              "alzCloudEnvironments": [
+                "AzureCloud"
+              ],
               "_deployed_by_alz_monitor": "True"
             }
           },
@@ -392,8 +395,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.18.4.5664",
-              "templateHash": "15470550829135380330"
+              "version": "0.19.5.34762",
+              "templateHash": "15420579663502908010"
             }
           },
           "parameters": {

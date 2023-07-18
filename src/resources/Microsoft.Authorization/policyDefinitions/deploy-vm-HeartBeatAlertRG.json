@@ -4,8 +4,8 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.18.4.5664",
-      "templateHash": "7694453237048934813"
+      "version": "0.19.5.34762",
+      "templateHash": "8109269520710178315"
     }
   },
   "parameters": {
@@ -122,13 +122,13 @@
         "mode": "Incremental",
         "parameters": {
           "name": {
-            "value": "Deploy_VM_HeartBeat_Alert"
+            "value": "Deploy_VM_HeartBeat_Alert_RG"
           },
           "displayName": {
-            "value": "[DINE] Deploy VM HeartBeat Alert"
+            "value": "Deploy VM HeartBeat Alert"
           },
           "description": {
-            "value": "DINE policy to audit/deploy VM HeartBeat Alert"
+            "value": "Policy to audit/deploy VM HeartBeat Alert for VMs in the resource group"
           },
           "location": {
             "value": "[parameters('policyLocation')]"
@@ -136,8 +136,11 @@
           "metadata": {
             "value": {
               "version": "1.0.0",
-              "Category": "Compute",
-              "source": "https://github.com/Azure/ALZ-Monitor/"
+              "category": "Compute",
+              "source": "https://github.com/Azure/Enterprise-Scale/",
+              "alzCloudEnvironments": [
+                "AzureCloud"
+              ]
             }
           },
           "parameters": {
@@ -401,7 +404,7 @@
                                         ]
                                       }
                                     ],
-                                    "failingPariods": {
+                                    "failingPeriods": {
                                       "numberOfEvaluationPeriods": 1,
                                       "minFailingPeriodsToAlert": 1
                                     }
@@ -488,8 +491,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.18.4.5664",
-              "templateHash": "15470550829135380330"
+              "version": "0.19.5.34762",
+              "templateHash": "15420579663502908010"
             }
           },
           "parameters": {

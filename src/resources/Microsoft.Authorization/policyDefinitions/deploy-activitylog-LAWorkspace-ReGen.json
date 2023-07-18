@@ -4,8 +4,8 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.18.4.5664",
-      "templateHash": "5683091315786902635"
+      "version": "0.19.5.34762",
+      "templateHash": "13529653102026489877"
     }
   },
   "parameters": {
@@ -59,10 +59,10 @@
             "value": "Deploy_activitylog_LAWorkspace_KeyRegen"
           },
           "displayName": {
-            "value": "[DINE] Deploy Activity Log LA Workspace Regenerate Key Alert"
+            "value": "Deploy Activity Log LA Workspace Regenerate Key Alert"
           },
           "description": {
-            "value": "DINE policy to Deploy Activity Log LA Workspace Regenerate Key Alert"
+            "value": "Policy to Deploy Activity Log LA Workspace Regenerate Key Alert"
           },
           "location": {
             "value": "[parameters('policyLocation')]"
@@ -70,8 +70,11 @@
           "metadata": {
             "value": {
               "version": "1.0.1",
-              "Category": "ActivityLog",
-              "source": "https://github.com/Azure/ALZ-Monitor/",
+              "category": "Monitoring",
+              "source": "https://github.com/Azure/Enterprise-Scale/",
+              "alzCloudEnvironments": [
+                "AzureCloud"
+              ],
               "_deployed_by_alz_monitor": "True"
             }
           },
@@ -325,8 +328,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.18.4.5664",
-              "templateHash": "15470550829135380330"
+              "version": "0.19.5.34762",
+              "templateHash": "15420579663502908010"
             }
           },
           "parameters": {

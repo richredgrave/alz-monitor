@@ -4,8 +4,8 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.18.4.5664",
-      "templateHash": "17247014419077749333"
+      "version": "0.19.5.34762",
+      "templateHash": "8154954827864449406"
     }
   },
   "parameters": {
@@ -92,10 +92,10 @@
             "value": "Deploy_KeyVault_Requests_Alert"
           },
           "displayName": {
-            "value": "[DINE] Deploy KeyVault Requests Alert"
+            "value": "Deploy KeyVault Requests Alert"
           },
           "description": {
-            "value": "DINE policy to audit/deploy KeyVault Requests Alert"
+            "value": "Policy to audit/deploy KeyVault Requests Alert"
           },
           "location": {
             "value": "[parameters('policyLocation')]"
@@ -103,8 +103,11 @@
           "metadata": {
             "value": {
               "version": "1.0.1",
-              "Category": "Key Vault",
-              "source": "https://github.com/Azure/ALZ-Monitor/",
+              "category": "Key Vault",
+              "source": "https://github.com/Azure/Enterprise-Scale/",
+              "alzCloudEnvironments": [
+                "AzureCloud"
+              ],
               "_deployed_by_alz_monitor": "True"
             }
           },
@@ -375,8 +378,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.18.4.5664",
-              "templateHash": "15470550829135380330"
+              "version": "0.19.5.34762",
+              "templateHash": "15420579663502908010"
             }
           },
           "parameters": {
